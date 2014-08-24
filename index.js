@@ -11,6 +11,17 @@ underscore.extend(ContextManager.prototype, {
         this.context = {};
     },
 
+    /*
+     * Used for registering a new member with the context.
+     * Arguments:
+     *  dependencies: a list of dependencies for this member
+     *  dependencyName: how to refer to this member
+     *  callback: the method that will be called when all of
+     *    dependencies are resolved. It will be passed a deferred
+     *    object and a context object. The deferred should be 
+     *    resolved when the member object is ready. The context
+     *    object will contain the dependencies.
+     */
     register:   function(dependencies, dependencyName, callback) {
         var deferred = Q.defer();
         var details = {
@@ -37,6 +48,15 @@ underscore.extend(ContextManager.prototype, {
         return this.context[dependencyName].obj;
     },
 
+    /*
+     * Should be called once all the desired members have
+     * been registered with the ContextManager. This method
+     * will begin constructing the context members, once a
+     * particular member's dependencies are resolved its
+     * constructor will be invoked. This method returns a
+     * promise that is resolved when all of the context's
+     * members are resolved.
+     */
     buildContext: function() {
         var that = this;
 
@@ -67,6 +87,11 @@ underscore.extend(ContextManager.prototype, {
         return Q.all(allPromises);
     },
 
+    /*
+     * Given a list of context file paths, will load each one
+     * in order. If multiple files register a member with the
+     * same name, then only the latest one is kept.
+     */
     loadContextFiles: function(cntxtFiles) {
         var that = this;
 
