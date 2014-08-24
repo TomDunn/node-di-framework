@@ -40,17 +40,24 @@ underscore.extend(ContextManager.prototype, {
     buildContext: function() {
         var that = this;
 
-        _.values(this.context, function(contxtObj) {
-            var dependencyDetails = _.map(contxtObj.dependencies, function(dependencyName) {
+        underscore.each(underscore.values(this.context), function(contxtObj) {
+
+            var dependencyDetails = underscore.map(contxtObj.dependencies, function(dependencyName) {
                 return that.getContextObjDetails(dependencyName);
             });
 
-            var dependencyPromises = _.map(dependencyDetails, function(dependency) {
+            var dependencyPromises = underscore.map(dependencyDetails, function(dependency) {
                 return dependency.deferred.promise;
             });
 
             Q.all(dependencyPromises).done(function() {
-                contxtObj.prepare(contxtObj.deferred);
+                var cntxt = {};
+
+                underscore.each(dependencyDetails, function(d) {
+                    cntxt[d.name] = d.obj;
+                });
+
+                contxtObj.prepare(contxtObj.deferred, cntxt);
             });
         });
     }
