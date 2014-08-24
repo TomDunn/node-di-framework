@@ -1,0 +1,32 @@
+{
+  "name": "node-di-framework",
+  "version": "0.0.0",
+  "description": "Dependency injection framework with support for asynchronous dependency initialization",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:TomDunn/node-di-framework.git"
+  },
+  "keywords": [
+    "dependency",
+    "injection",
+    "asynchronous"
+  ],
+  "author": "tidunn13@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TomDunn/node-di-framework/issues"
+  },
+  "homepage": "https://github.com/TomDunn/node-di-framework",
+  "dependencies": {
+    "q": "^1.0.1",
+    "underscore": "^1.6.0"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "mocha": "^1.21.4"
+  }
+}
