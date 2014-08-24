@@ -15,51 +15,21 @@ describe('Dependency Injection Framework Tests', function() {
     });
 
     it('a2 should not run until a1 completes', function(done) {
-        cm.register([], 'a1', function(deferred) {
-
-            delayed(30, function() {
-                deferred.resolve({msg: "hey"});
-            });
-        });
-
-        cm.register(['a1'], 'a2', function(deferred, cntxt) {
-
-            assert.equal(cntxt.a1.msg, "hey");
-
-            deferred.resolve({
-                msg: "hey2"
-            });
-
+        cm.loadContextFiles(['./test_cntxts/test1.js']);
+        cm.buildContext().done(function() {
+            assert.equal(cm.context.a1.obj.msg, "hey");
+            assert.equal(cm.context.a2.obj.msg, "hey2");
             done();
         });
-
-        cm.buildContext();
     });
 
     it('b3 should not initialize until both b2 and b1 have finished', function(done) {
-        cm.register([], 'b1', function(deferred) {
-
-            delayed(30, function() {
-                deferred.resolve({msg: "heya1"});
-            });
-        });
-
-        cm.register([], 'b2', function(deferred) {
-
-            delayed(40, function() {
-                deferred.resolve({msg: "heya2"});
-            });
-        });
-
-        cm.register(['b1', 'b2'], 'b3', function(deferred, cntxt) {
-
-            assert.equal(cntxt.b1.msg, "heya1");
-            assert.equal(cntxt.b2.msg, "heya2");
-
-            deferred.resolve({msg: "heya3"});
+        cm.loadContextFiles(['./test_cntxts/test2.js']);
+        cm.buildContext().done(function() {
+            assert.equal(cm.context.b1.obj.msg, "heya1");
+            assert.equal(cm.context.b2.obj.msg, "heya2");
+            assert.equal(cm.context.b3.obj.msg, "heya3");
             done();
         });
-
-        cm.buildContext();
     });
 });

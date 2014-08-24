@@ -41,7 +41,6 @@ underscore.extend(ContextManager.prototype, {
         var that = this;
 
         underscore.each(underscore.values(this.context), function(contxtObj) {
-
             var dependencyDetails = underscore.map(contxtObj.dependencies, function(dependencyName) {
                 return that.getContextObjDetails(dependencyName);
             });
@@ -59,6 +58,20 @@ underscore.extend(ContextManager.prototype, {
 
                 contxtObj.prepare(contxtObj.deferred, cntxt);
             });
+        });
+
+        var allPromises = underscore.map(underscore.keys(this.context), function(dependencyName) {
+            return that.getContextObjDetails(dependencyName).deferred.promise;
+        });
+
+        return Q.all(allPromises);
+    },
+
+    loadContextFiles: function(cntxtFiles) {
+        var that = this;
+
+        underscore.each(cntxtFiles, function(cntxtFile) {
+            require(cntxtFile)(that);
         });
     }
 });
